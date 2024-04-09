@@ -3,3 +3,5 @@ category_encoders
 graphviz
 pandas
 scikit-learn
+umap-learn
+sentence-transformers
