@@ -12,15 +12,15 @@ class Head(nn.Module):
         self.query = nn.Linear(n_embd, head_size, bias=False)
         self.value = nn.Linear(n_embd, head_size, bias=False)
 
-        self.register_buffer("tril", torch.tril(torch.ones(context_size, context_size)))
+        self.register_buffer("tril", torch.tril(torch.ones(context_size, context_size))) # This is a trick for averaging out the context "effects"
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         # input of size (batch, time-step, channels)
         # output of size (batch, time-step, head size)
         B, T, C = x.shape
-        k = self.key(x)  # (B,T,hs)
-        q = self.query(x)  # (B,T,hs)
+        k = self.key(x)  # (B,T,hs) key is the "answer" to the question the token asks
+        q = self.query(x)  # (B,T,hs) query is the "question" the given token asks
         v = self.value(x)  # (B,T,hs)
         # compute attention scores ("affinities")
         wei = (
